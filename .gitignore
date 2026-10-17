@@ -1,0 +1,14 @@
+bin/
+obj/
+.vs/
+*.user
+*.lplug4
+.DS_Store
+
+# Sandboxed build artifacts (redirected HOME)
+Library/
+.local/
+
+# Local
+.claude/
+CLAUDE.md
