@@ -1,0 +1,27 @@
+type: plugin4
+name: ArtRawEditor
+displayName: ART Raw Editor
+description: Control ART (Another RawTherapee) sliders and shortcuts with the Loupedeck Live.
+pluginFileName: ArtRawEditorPlugin.dll
+version: 1.0
+author: nsc
+copyright: Copyright © 2026 nsc
+
+pluginFolderWin: bin
+pluginFolderMac: bin
+
+supportedDevices:
+    - LoupedeckCtFamily
+    - LoupedeckPlusFamily
+    - LogitechCreativeFamily
+
+pluginCapabilities:
+    - HasApplication
+    - ActivatesApplication
+
+minimumLoupedeckVersion: 6.3
+
+license: MIT
+licenseUrl: https://opensource.org/licenses/MIT
+supportPageUrl: https://github.com/Nick11/loupedeck-live-art/issues
+homePageUrl: https://github.com/Nick11/loupedeck-live-art

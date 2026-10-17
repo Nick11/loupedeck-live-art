@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <RootNamespace>Loupedeck.ArtRawEditorPlugin</RootNamespace>
+
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+
+    <UserHome Condition="$(OS) == 'Windows_NT'">$(USERPROFILE)</UserHome>
+    <UserHome Condition="$(OS) != 'Windows_NT'">$(HOME)</UserHome>
+
+    <!-- net8 PluginApi.dll shipped with LogiPluginTool; the installed service's copy targets net10. -->
+    <LogiPluginToolVersion>6.1.4.22672</LogiPluginToolVersion>
+    <PluginApiDir>$(UserHome)/.dotnet/tools/.store/logiplugintool/$(LogiPluginToolVersion)/logiplugintool/$(LogiPluginToolVersion)/tools/net8.0/any/</PluginApiDir>
+
+    <PluginDir Condition="$(OS) == 'Windows_NT'">$(LocalAppData)/Logi/LogiPluginService/Plugins/</PluginDir>
+    <PluginDir Condition="$(OS) != 'Windows_NT'">$(UserHome)/Library/Application Support/Logi/LogiPluginService/Plugins/</PluginDir>
+    <PluginLink>$(PluginDir)$(MSBuildProjectName).link</PluginLink>
+
+    <BaseOutputPath>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)../bin/'))</BaseOutputPath>
+    <OutputPath>$(BaseOutputPath)$(Configuration)/bin/</OutputPath>
+
+    <PluginShortName>ArtRawEditor</PluginShortName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="PluginApi">
+      <HintPath>$(PluginApiDir)PluginApi.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="../icons/buttons/*.svg" LogicalName="icons/buttons/%(Filename).svg" />
+  </ItemGroup>
+
+  <Target Name="CopyPackage" AfterTargets="PostBuildEvent">
+    <ItemGroup>
+      <PackageFiles Include="package/**/*;../LICENSE;../EULA.md;../THIRD_PARTY_NOTICES.md" />
+    </ItemGroup>
+    <Copy SourceFiles="@(PackageFiles)" DestinationFolder="$(OutputPath)../%(RecursiveDir)" />
+  </Target>
+
+  <!-- Development install: the Logi Plugin Service loads the plugin from bin/ via the .link file. -->
+  <Target Name="LinkPlugin" AfterTargets="PostBuildEvent">
+    <MakeDir Directories="$(PluginDir)" />
+    <WriteLinesToFile File="$(PluginLink)" Lines="$(BaseOutputPath)$(Configuration)/" Overwrite="true" />
+    <Exec Condition="$(OS) == 'Windows_NT'" Command="start loupedeck:plugin/$(PluginShortName)/reload" ContinueOnError="true" />
+    <Exec Condition="$(OS) != 'Windows_NT'" Command="open loupedeck:plugin/$(PluginShortName)/reload" ContinueOnError="true" />
+  </Target>
+
+  <Target Name="PluginClean" AfterTargets="CoreClean">
+    <Delete Files="$(PluginLink)" />
+    <RemoveDir Directories="$(OutputPath)../" />
+  </Target>
+
+</Project>
