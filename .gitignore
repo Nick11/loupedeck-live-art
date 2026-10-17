@@ -12,3 +12,7 @@ Library/
 # Local
 .claude/
 CLAUDE.md
+
+# Exported/generated profiles (the shipped one is src/package/profiles/)
+/*.lp5
+AI.md
