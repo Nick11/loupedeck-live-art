@@ -8,6 +8,8 @@
 
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <!-- Release binaries are published: no local paths in DLL/PDB. -->
+    <ContinuousIntegrationBuild Condition="$(Configuration) == 'Release'">true</ContinuousIntegrationBuild>
 
     <UserHome Condition="$(OS) == 'Windows_NT'">$(USERPROFILE)</UserHome>
     <UserHome Condition="$(OS) != 'Windows_NT'">$(HOME)</UserHome>
